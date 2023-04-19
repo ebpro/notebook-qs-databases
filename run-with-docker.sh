@@ -1,7 +1,19 @@
+#!/usr/bin/env bash
+
+WORK_DIR="${HOME}/JUPYTER_WORK_DIR"
+
+IMAGE_REPO=brunoe
+IMAGE_NAME=jupyter-db-pg
+IMAGE_TAG=develop
+
+
 docker run --rm \
-       --name JupyterJava-${PWD##*/} \
-       --volume $PWD:/home/jovyan/${PWD##*/} \
-        --publish 8888:8888 \
-        --env NB_UID=$UID \
-        --env JUPYTER_ENABLE_LAB=yes \
-        brunoe/jupyterdb:develop
+  --name ${IMAGE_NAME}-${PWD##*/} \
+  --user root \
+  --volume ${PWD}:/home/jovyan/notebooks/ \
+  --volume ${WORK_DIR}:/home/jovyan/works/ \
+  --publish 8888:8888 \
+  --env NB_UID=$UID \
+  ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_TAG} \
+	start-notebook.sh --notebook-dir=/home/jovyan/notebooks/
+
